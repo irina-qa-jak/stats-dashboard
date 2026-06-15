@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 animate__animated animate__fadeIn">
+    <h2 class="text-center mb-4"><i class="fas fa-random me-2"></i> Fisher's Exact Test</h2>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-database me-2"></i> Ввод данных</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Таблица (2×2)</label>
+                            <textarea name="table" class="form-control" rows="3"
+                                placeholder="Например:
+10 20
+5 15">{{ request.form.get('table', '') }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-calculator me-1"></i> Рассчитать
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% if odds_ratio is not none and p_value is not none %}
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-poll me-2"></i> Результаты</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Odds Ratio:</strong> {{ "%.4f"|format(odds_ratio) }}</p>
+                    <p><strong>P-значение:</strong> {{ "%.4f"|format(p_value) }}</p>
+                    {% if p_value < 0.05 %}
+                        <p class="text-success">Различия статистически значимы.</p>
+                    {% else %}
+                        <p class="text-muted">Статистически значимых различий не обнаружено.</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% elif error %}
+            <div class="alert alert-danger mt-4">{{ error }}</div>
+            {% else %}
+            <p class="text-muted mt-4">Введите данные и нажмите "Рассчитать".</p>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-8">
+            {% if plots %}
+                <h4 class="mb-3">Визуализация данных</h4>
+                {% for name, html_plot in plots.items() %}
+                    <div class="mb-4">{{ html_plot|safe }}</div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

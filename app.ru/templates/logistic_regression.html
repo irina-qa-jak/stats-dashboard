@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 animate__animated animate__fadeIn">
+    <h2 class="mb-4">Логистическая регрессия</h2>
+
+    <div class="row">
+        <div class="col-lg-5">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Ввод данных</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">X значения</label>
+                            <input type="text" name="x_values" class="form-control"
+                                   value="{{ request.form.get('x_values', '') }}"
+                                   placeholder="Например: 68, 70, 71, 65, ...">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">y значения (0 или 1)</label>
+                            <input type="text" name="y_values" class="form-control"
+                                   value="{{ request.form.get('y_values', '') }}"
+                                   placeholder="Например: 0, 1, 1, 0, ...">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Выполнить анализ</button>
+                    </form>
+                </div>
+            </div>
+
+            {% if error %}
+                <div class="alert alert-danger mt-3">{{ error }}</div>
+            {% endif %}
+
+            {% if accuracy is not none %}
+            <div class="card mt-3">
+                <div class="card-header bg-success text-white">
+                    <h5>Результаты</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Коэффициент:</strong> {{ "%.4f"|format(coef) }}</p>
+                    <p><strong>Свободный член:</strong> {{ "%.4f"|format(intercept) }}</p>
+                    <p><strong>Точность:</strong> {{ "%.4f"|format(accuracy) }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-7">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Графики</h5>
+                </div>
+                <div class="card-body">
+                    {% if plots %}
+                        {% if plots.scatter %}
+                            <h6 class="mt-2">Данные и предсказанные вероятности</h6>
+                            <div class="plot-container mb-3">{{ plots.scatter|safe }}</div>
+                        {% endif %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                {% if plots.roc %}
+                                    <h6>ROC-кривая</h6>
+                                    <div class="plot-container mb-3">{{ plots.roc|safe }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                {% if plots.hist %}
+                                    <h6>Гистограмма вероятностей</h6>
+                                    <div class="plot-container mb-3">{{ plots.hist|safe }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if plots.kde %}
+                            <h6>Распределение (marginal violin)</h6>
+                            <div class="plot-container mb-3">{{ plots.kde|safe }}</div>
+                        {% endif %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-chart-line fa-4x text-muted mb-3"></i>
+                            <p class="text-muted">Графики появятся после успешного анализа.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Добро пожаловать в Statistical Dashboard PRO</h1>
+    <p class="lead">Выберите нужный тест. Ниже приведено описание, когда какой тест использовать.</p>
+
+    <!-- 1. Сравнение средних -->
+    <h3 class="mt-5">Сравнение средних</h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">ANOVA</div>
+                <div class="card-body">
+                    <p>Сравнение средних между 3+ группами. Использовать, когда данные нормальны и дисперсии равны.</p>
+                    <a href="{{ url_for('anova_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">T-Test</div>
+                <div class="card-body">
+                    <p>Сравнение средних двух групп (нормальность + равные дисперсии).</p>
+                    <a href="{{ url_for('ttest_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Tukey</div>
+                <div class="card-body">
+                    <p>Парные сравнения после ANOVA.</p>
+                    <a href="{{ url_for('tukey_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Mann-Whitney</div>
+                <div class="card-body">
+                    <p>Сравнение медиан двух групп (непараметрический аналог T-теста).</p>
+                    <a href="{{ url_for('mannwhitney_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Levene</div>
+                <div class="card-body">
+                    <p>Проверка равенства дисперсий между группами.</p>
+                    <a href="{{ url_for('levene_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Корреляции -->
+    <h3 class="mt-5">Корреляции</h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Pearson</div>
+                <div class="card-body">
+                    <p>Корреляция для нормальных данных (линейная связь).</p>
+                    <a href="{{ url_for('pearson_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Spearman</div>
+                <div class="card-body">
+                    <p>Корреляция по рангам (непараметрическая, монотонная связь).</p>
+                    <a href="{{ url_for('spearman_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Kendall</div>
+                <div class="card-body">
+                    <p>Корреляция по порядку (непараметрическая, меньше чувствительна к выбросам).</p>
+                    <a href="{{ url_for('kendall_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. Проверка распределения -->
+    <h3 class="mt-5">Проверка распределения</h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Shapiro</div>
+                <div class="card-body">
+                    <p>Проверка нормальности распределения (n &lt; 5000).</p>
+                    <a href="{{ url_for('shapiro_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">IQR</div>
+                <div class="card-body">
+                    <p>Межквартильный размах — мера разброса данных, устойчива к выбросам.</p>
+                    <a href="{{ url_for('iqr_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Fisher</div>
+                <div class="card-body">
+                    <p>Точный тест Фишера для 2×2 таблиц.</p>
+                    <a href="{{ url_for('fisher_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Регрессии -->
+    <h3 class="mt-5">Регрессии</h3>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Linear Regression</div>
+                <div class="card-body">
+                    <p>Прямая линия, аппроксимирующая зависимость Y от X.</p>
+                    <a href="{{ url_for('linear_regression_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Polynomial Regression</div>
+                <div class="card-body">
+                    <p>Регрессия с кривой (полином) для более сложных зависимостей.</p>
+                    <a href="{{ url_for('polynomial_regression_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">Logistic Regression</div>
+                <div class="card-body">
+                    <p>Модель для бинарных исходов (0/1).</p>
+                    <a href="{{ url_for('logistic_regression_test') }}" class="btn btn-primary">Перейти</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 animate__animated animate__fadeIn">
+    <h2 class="text-center mb-4"><i class="fas fa-chart-line me-2"></i> Линейная регрессия</h2>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-database me-2"></i> Ввод данных</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">X данные</label>
+                            <input type="text" name="x_data" class="form-control" placeholder="1, 2, 3, 4"
+                                   value="{{ request.form.get('x_data', '') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Y данные</label>
+                            <input type="text" name="y_data" class="form-control" placeholder="2, 3, 5, 7"
+                                   value="{{ request.form.get('y_data', '') }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-calculator me-1"></i> Выполнить анализ
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% if slope is not none %}
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-poll me-2"></i> Результаты</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Угловой коэффициент (slope):</strong> {{ "%.4f"|format(slope) }}</p>
+                    <p><strong>Пересечение (intercept):</strong> {{ "%.4f"|format(intercept) }}</p>
+                    <p><strong>Коэффициент корреляции R:</strong> {{ "%.4f"|format(r_value) }}</p>
+                    <p><strong>P-значение:</strong> {{ "%.4f"|format(p_value) }}</p>
+                    <p><strong>Стандартная ошибка:</strong> {{ "%.4f"|format(std_err) }}</p>
+                </div>
+            </div>
+            {% elif error %}
+            <div class="alert alert-danger mt-4">{{ error }}</div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-8">
+            {% if plots %}
+                <div class="card mb-4">
+                    <div class="card-header"><h5>График с линией регрессии</h5></div>
+                    <div class="card-body">{{ plots.scatter|safe }}</div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header"><h5>Остатки vs Предсказанные значения</h5></div>
+                    <div class="card-body">{{ plots.residuals|safe }}</div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header"><h5>QQ-Plot остатков</h5></div>
+                    <div class="card-body">{{ plots.qqplot|safe }}</div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header"><h5>Гистограмма остатков</h5></div>
+                    <div class="card-body">{{ plots.hist_residuals|safe }}</div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-chart-line fa-4x text-muted mb-4"></i>
+                    <h4>Графики отсутствуют</h4>
+                    <p class="text-muted">Введите данные и нажмите "Выполнить анализ"</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

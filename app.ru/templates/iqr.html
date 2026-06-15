@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Interquartile Range (IQR) — Межквартильный размах</h2>
+
+    <form method="POST" class="mb-4">
+        <div class="mb-3">
+            <label for="data" class="form-label">Введите данные:</label>
+            <textarea name="data" id="data" class="form-control" rows="3"
+                      placeholder="Например: 5, 7, 8, 12, 15">{{ request.form.get('data', '') }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Рассчитать IQR</button>
+    </form>
+
+    {% if iqr_value is not none %}
+        <p><strong>IQR:</strong> {{ "%.4f"|format(iqr_value) }}</p>
+        <p><strong>Q1:</strong> {{ "%.4f"|format(q1) }}</p>
+        <p><strong>Q3:</strong> {{ "%.4f"|format(q3) }}</p>
+
+        {% if plots %}
+            <h4>Визуализация</h4>
+            <div class="plot-container">{{ plots.boxplot|safe }}</div>
+            <div class="plot-container">{{ plots.histogram|safe }}</div>
+        {% endif %}
+    {% elif error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% else %}
+        <p class="text-muted">Результатов ещё нет — введите данные и нажмите Анализировать.</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+

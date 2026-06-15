@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Mann–Whitney U Test</h2>
+
+  <form method="POST" class="mb-3">
+    <div class="mb-3">
+      <label class="form-label">Группа 1 (числа через запятую или пробел)</label>
+      <input type="text" name="group1" class="form-control"
+             value="{{ request.form.get('group1','') }}" placeholder="например: 1, 2, 3, 4">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Группа 2</label>
+      <input type="text" name="group2" class="form-control"
+             value="{{ request.form.get('group2','') }}" placeholder="например: 2, 3, 5, 6">
+    </div>
+    <button class="btn btn-primary">Выполнить анализ</button>
+  </form>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, msg in messages %}
+        <div class="alert alert-{{ 'danger' if category == 'error' else 'info' }}">{{ msg }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if u_stat is not none %}
+    <div class="card mt-3">
+      <div class="card-body">
+        <p><strong>U-статистика:</strong> {{ "%.4f"|format(u_stat) }}</p>
+        {% if p_value is not none %}
+          <p><strong>p-value:</strong> {{ "%.4f"|format(p_value) }}</p>
+        {% endif %}
+        <p><strong>Вывод:</strong> {{ conclusion }}</p>
+      </div>
+    </div>
+  {% endif %}
+
+  {% if plots %}
+    <h4 class="mt-4">Графики</h4>
+    <div class="plot-container mt-3">{{ plots.boxplot|safe }}</div>
+    <div class="plot-container mt-3">{{ plots.hist|safe }}</div>
+    <div class="plot-container mt-3">{{ plots.violin|safe }}</div>
+    <div class="plot-container mt-3">{{ plots.strip|safe }}</div>
+  {% endif %}
+</div>
+{% endblock %}
+

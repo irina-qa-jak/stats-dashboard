@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Тест Тьюки</h2>
+
+    <form method="POST" id="tukey-form">
+        <div id="groups-container">
+            <div class="mb-3 group-block">
+                <label class="form-label">Группа 1</label>
+                <textarea name="group[]" class="form-control" rows="2" placeholder="1, 2, 3"></textarea>
+            </div>
+            <div class="mb-3 group-block">
+                <label class="form-label">Группа 2</label>
+                <textarea name="group[]" class="form-control" rows="2" placeholder="4, 5, 6"></textarea>
+            </div>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="addGroup()">Добавить группу</button>
+        <button type="submit" class="btn btn-primary mt-2">Выполнить тест</button>
+    </form>
+
+    {% if error %}
+        <div class="alert alert-danger mt-3">{{ error }}</div>
+    {% endif %}
+
+    {% if anova_table %}
+        <h3 class="mt-4">Результаты ANOVA</h3>
+        {{ anova_table|safe }}
+    {% endif %}
+
+    {% if tukey_result %}
+        <h3 class="mt-4">Результаты теста Тьюки</h3>
+        {{ tukey_result|safe }}
+    {% endif %}
+
+    {% if plots %}
+        <h3 class="mt-4">Графики</h3>
+        <div class="plot-container">{{ plots.boxplot|safe }}</div>
+        <div class="plot-container">{{ plots.violin|safe }}</div>
+        <div class="plot-container">{{ plots.means|safe }}</div>
+        <div class="plot-container">{{ plots.tukey|safe }}</div>
+    {% endif %}
+</div>
+
+<script>
+let groupCount = 2;
+function addGroup() {
+    groupCount++;
+    const container = document.getElementById('groups-container');
+    const block = document.createElement('div');
+    block.classList.add('mb-3', 'group-block');
+    block.innerHTML = `
+        <label class="form-label">Группа ${groupCount}</label>
+        <textarea name="group[]" class="form-control" rows="2" placeholder="..."></textarea>
+    `;
+    container.appendChild(block);
+}
+</script>
+{% endblock %}
+
+

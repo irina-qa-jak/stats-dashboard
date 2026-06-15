@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Shapiro-Wilk Test</h2>
+    <form method="POST">
+        <textarea name="data" class="form-control" rows="3" placeholder="Например: 1, 2, 3, 4">{{ request.form.get('data', '') }}</textarea>
+        <button type="submit" class="btn btn-primary mt-2">Анализировать</button>
+    </form>
+
+    {% if stat is not none and p_value is not none %}
+    <p><strong>Статистика:</strong> {{ "%.4f"|format(stat) }}</p>
+    <p><strong>p-value:</strong> {{ "%.4f"|format(p_value) }}</p>
+    <p><strong>Вывод:</strong> {{ conclusion }}</p>
+
+    {% if plots %}
+        <h3>Гистограмма</h3>
+        {{ plots.histogram|safe }}
+
+        <h3>Boxplot</h3>
+        {{ plots.boxplot|safe }}
+
+        <h3>QQ-Plot</h3>
+        {{ plots.qqplot|safe }}
+
+        <h3>KDE</h3>
+        {{ plots.kde|safe }}
+    {% endif %}
+{% elif error %}
+    <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+</div>
+{% endblock %}
+

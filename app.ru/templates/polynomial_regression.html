@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 animate__animated animate__fadeIn">
+    <h2 class="text-center mb-4"><i class="fas fa-project-diagram me-2"></i> Полиномиальная регрессия</h2>
+
+    <div class="row">
+        <!-- Левая панель -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-database me-2"></i> Ввод данных</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">X данные</label>
+                            <input type="text" name="x_data" class="form-control" value="{{ request.form.get('x_data', '') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Y данные</label>
+                            <input type="text" name="y_data" class="form-control" value="{{ request.form.get('y_data', '') }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Степень полинома</label>
+                            <input type="number" name="degree" class="form-control" value="{{ request.form.get('degree', 2) }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-calculator me-1"></i> Выполнить анализ
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            {% if coefficients is not none %}
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-poll me-2"></i> Результаты</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Коэффициенты:</strong> {{ coefficients }}</p>
+                    <p><strong>Пересечение:</strong> {{ intercept }}</p>
+                    <p><strong>R²:</strong> {{ "%.4f"|format(r2_score_val) }}</p>
+                </div>
+            </div>
+            {% elif error %}
+            <div class="alert alert-danger mt-4">{{ error }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Правая панель (графики) -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-chart-line me-2"></i> Визуализация</h5>
+                </div>
+                <div class="card-body">
+                    {% if plots %}
+                        <h5>Модель и данные</h5>
+                        {{ plots.fit|safe }}
+
+                        <h5 class="mt-4">График остатков</h5>
+                        {{ plots.residuals|safe }}
+
+                        <h5 class="mt-4">Гистограмма остатков</h5>
+                        {{ plots.residuals_hist|safe }}
+
+                        <h5 class="mt-4">QQ-Plot</h5>
+                        {{ plots.qqplot|safe }}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-chart-line fa-4x text-muted mb-4"></i>
+                            <h4>Графики отсутствуют</h4>
+                            <p class="text-muted">Введите данные и нажмите "Выполнить анализ".</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

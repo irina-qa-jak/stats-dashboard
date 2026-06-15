@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4 animate__animated animate__fadeIn">
+    <h2 class="text-center mb-4"><i class="fas fa-link me-2"></i> Kendall Rank Correlation</h2>
+
+    <div class="row">
+        <!-- Ввод данных -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5><i class="fas fa-database me-2"></i> Ввод данных</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">X данные</label>
+                            <input type="text" name="x_data" class="form-control" 
+                                   value="{{ request.form.get('x_data', '') }}" placeholder="1, 2, 3, 4">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Y данные</label>
+                            <input type="text" name="y_data" class="form-control" 
+                                   value="{{ request.form.get('y_data', '') }}" placeholder="2, 3, 4, 5">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-calculator me-1"></i> Рассчитать
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Результаты -->
+            {% if correlation is not none and p_value is not none %}
+            <div class="card mt-4">
+                <div class="card-header bg-info text-white">
+                    <h5><i class="fas fa-poll me-2"></i> Результаты</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Коэффициент Кендалла:</strong> {{ "%.4f"|format(correlation) }}</p>
+                    <p><strong>P-значение:</strong> {{ "%.4f"|format(p_value) }}</p>
+                    <p><strong>Вывод:</strong> {{ conclusion }}</p>
+                </div>
+            </div>
+            {% elif error %}
+            <div class="alert alert-danger mt-4">{{ error }}</div>
+            {% endif %}
+        </div>
+
+        <!-- Графики -->
+        <div class="col-lg-8">
+            {% if plots %}
+                <div class="card mb-4">
+                    <div class="card-header"><strong>Scatter Plot</strong></div>
+                    <div class="card-body">{{ plots.scatter|safe }}</div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header"><strong>Гистограммы</strong></div>
+                    <div class="card-body">{{ plots.histograms|safe }}</div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header"><strong>Violin Plot</strong></div>
+                    <div class="card-body">{{ plots.violin|safe }}</div>
+                </div>
+                <div class="card mb-4">
+                    <div class="card-header"><strong>Матрица корреляций</strong></div>
+                    <div class="card-body">{{ plots.heatmap|safe }}</div>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-chart-line fa-4x text-muted mb-4"></i>
+                    <h4>Графики отсутствуют</h4>
+                    <p class="text-muted">Введите данные и нажмите "Рассчитать"</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
